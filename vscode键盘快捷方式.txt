@@ -1,0 +1,47 @@
+切换面板可见性:     Ctrl + J
+    面板最大化:     Ctrl + Shift + F11
+切换主侧栏可见性:   Ctrl + B
+
+触发建议: Shift + Alt + A
+
+行注释: Ctrl + /
+块注释: Ctrl + Shift + /
+
+聚焦:
+    面板:   Ctrl + `
+    侧栏:   Ctrl + Shift + E
+    编辑器:
+
+终端:
+    终止终端:        Ctrl + Shift + Z
+    创建新终端:      Ctrl + Alt + `
+    切换上/下一终端: Ctrl + Page↑/↓
+
+编辑器:
+    拆分:
+        向下: Ctrl + K \
+        向右: Ctrl + K /
+    切换:
+        上/下一个编辑器: Ctrl + Page↑/↓
+        组中上/下一个编辑器: Ctrl + K Ctrl + Page↑/↓ (好像没区别)
+        左/右侧编辑器组: Ctrl + Alt + Page↑/↓
+        上/下侧编辑器组: Ctrl + Shift + Alt + Page↑/↓
+    移动到上/下一组: Ctrl + Alt + ←/→
+
+文件/文件夹:
+    打开(文件窗口): Ctrl + O
+    打开: Ctrl + P
+          Ctrl + Tab
+    新建: Ctrl + Win + Alt + N/M
+
+光标:
+    在顶/底部添加光标: Ctrl + Alt + ↑/↓
+    光标撤销:         Ctrl + U
+    跳转到指定行:     Ctrl + G
+    转到指定符号:     Ctrl + Shift + O
+    选择整个单词:     Ctrl + D
+
+
+Windows文件资源管理器:
+    进入上下级文件夹 Alt + ↑/↓
+    切换聚焦 (Shift) + Tab

@@ -1,0 +1,91 @@
+qmake常用变量
+    QT 定义需要使用的Qt模块 core gui
+    SOURCE 源文件.cpp
+    HEADERS 头文件.h
+    FORMS ui文件
+    RESOURCES 资源文件列表.qrc
+    TARGET 构建后的可执行文件
+    DESTDIR 目标可执行文件的存放路径
+    INCLUDEPATH 头文件的搜索路径列表
+    DEPENDPATH 依赖文件的搜索路径列表
+    
+
+Qt的一些常用组件(暂时只记自己用得到的)
+按钮部件
+    QCheckBox    复选框
+    QRadioButton 单选按钮
+    QPushButton  下压按钮
+    QToolButton  工具按钮
+    
+输入窗口部件
+    QCombBox:                   下拉组合框
+        QFontCombBox:           字体下拉组合框
+    QTextEdit:                  富文本编辑框
+        QLineEdit:              单行文本编辑框
+        QPlainTextEdit          简单的多行文本编辑器
+    SpinBox:                    数字旋转框
+        QDoubleSpinBox          双精度数字旋转框
+    QDateTimeEdit:              日期时间编辑框
+        QTimeEdit:              时间编辑框
+        QDateEdit:              日期编辑框
+    QScrollBar:滚动条
+        Horizontal Scroll Bar:  水平滚动条
+        Vertical Scroll Bar:    垂直滚动条
+    Slider:滑动条
+        Horizontal Slider:      水平滑动条
+        Vertical Slider:        垂直滑动条
+
+布局组件
+    Vertical Layout     垂直方向布局
+    Horizontal Layout   水平方向布局
+    Grid Layout         网格布局,网格布局大小改变时,每个网格的大小都改变
+    Form Layout         表单布局,与网格布局类似,但是只有最右侧的一列网格会改变大小
+    Horizontal Spacer   用于水平间隔的非可视组件
+    Vertical Spacer     用于垂直间隔的非可视组件
+
+信号与槽 (需插入Q_OBJECT宏)
+    QObject::connect(sender, SIGNAL(signal()), receiver, SLOT(slot()));                      // 使用宏
+    QObject::connect(btnClose, &QPushButton::clicked, Widget, qOverload<>(&QWidget::close)); // 使用函数指针
+
+宏定义
+    Q_UNUSED(name)                   声明函数中未被使用的参数
+    foreach(variable, container)     用于遍历容器的内容
+    qDebug(const char *message, ...) 用于在debugger窗口显示信息
+
+元对象系统
+    QObject类
+        元对象      QMetaObject *metaObject()        返回这个对象的元对象
+        类型信息    bool inherits()                  判断这个对象是不是某个类的子类的实例
+        对象树      QObjectList &children()          返回子对象列表
+                    QObject *parent()                返回父对象指针
+                    void setParent()                 设置父对象
+        信号与槽    QMetaObject::Connection connect() 设置信号与槽关联
+                    bool disconnect()                解除信号与槽的关联
+                    bool blockSignals()              设置是否阻止对象发射任何信号
+                    bool signalsBlocked()            返回对象是否被阻止发射任何信号
+        属性系统    QList<QByteArray> dynamicPropertyNames() 返回所有动态属性名称
+                    bool setProperty()                      设置属性值，或添加动态属性
+                    QVariant property()                     返回属性值
+    QMetaObject类 (自己去看书)
+        属性元数据  QMetaProperty property(int index) 返回序号为 index 的属性的元数据
+        qobject_cast<> 类型强转
+
+属性系统
+    Q_PROPERTY(type name // 定义一个值类型为type,名称为name的属性
+                (READ getFunction [WRITE setFunction] | 
+                 MEMBER memberName [(READ getFunction | WRITE setFunction)]) 
+
+                [MEMBER memberName]     // 指定一个成员变量与属性关联,指定后无须再设置READ和WRITE
+                [READ getFunction]      // 指定一个读取属性值的函数,没有MEMBER关键字时必须设置READ
+                [WRITE setFunction]     // 指定一个设置属性值的函数.只读属性没有WRITE配置
+                [RESET resetFunction]   // 可选的,用于指定一个设置属性默认值的函数
+                [NOTIFY notifySignal]   // 可选的,用于设置一个信号,当属性值变化时发射此信号
+                [REVISION int | REVISION(int[, int])] 
+                [DESIGNABLE bool]       // 表示属性是否在Qt Designer的属性编辑器里可见,默认值为true
+                [SCRIPTABLE bool] 
+                [STORED bool] 
+                [USER bool]             // 表示这个属性是不是用户可编辑的属性,默认值为false
+                [BINDABLE bindableProperty] 
+                [CONSTANT]              // 表示属性值是一个常数,具有CONSTANT关键字的属性不能有WRITE和NOTIFY关键字
+                [FINAL]                 // 表示所定义的属性不能被子类重载
+                [REQUIRED])

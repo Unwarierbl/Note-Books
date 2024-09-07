@@ -1,0 +1,10 @@
+{
+    "Version": "1.2",
+    "Data": {
+        "Source": "d:\\helloworld\\studyfiles\\笔记\\temp_code\\stringspreadsheetcell.cppm",
+        "ProvidedModule": "string_spreadsheet_cell",
+        "Includes": [],
+        "ImportedModules": [],
+        "ImportedHeaderUnits": []
+    }
+}

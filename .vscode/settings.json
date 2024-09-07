@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "*.h": "cpp",
+        "array": "cpp",
+        "string_view": "cpp",
+        "compare": "cpp"
+    },
+    "cSpell.words": [
+        "wchar"
+    ]
+}
