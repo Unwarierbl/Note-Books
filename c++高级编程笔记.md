@@ -2663,7 +2663,7 @@ Bird <|-- DogBird
 示例略。
 使用就具有多个父类的类对象与使用具有单个父类的类对象没什么不同。实际上，客户代码甚至不需要知道这个类有两个父类。需要关心的只是这个类支持的属性和行为。在此情况下，子类支持父类的所有 public 方法。
 
-#### 10.5.2 名称冲突和起义基类
+#### 10.5.2 名称冲突和歧义基类
 
 多重继承崩溃的场景并不难想象，下面的示例显示了一些必须要考虑的边缘情况。
 
@@ -4639,9 +4639,72 @@ C++ 不仅支持面向对象编程，还支持泛型编程（generic programming
 假设想要一个通用的棋盘类，可将其用作对象棋棋盘、跳棋棋盘、井字棋棋盘或其他任何二维的棋盘。为让这个棋盘通用，这个棋盘应该能保存象棋棋子、跳棋棋子、井字棋棋子或其他任何游戏类型的棋子。
 
 1. 编写不使用模板的代码
-    如果不使用模板，编写通用棋盘最好的方法是采用多态技术，保存通用的 GamePiece 对象，然后，可让每种游戏的棋子继承 GamePiece ChesPiece 可以是 GamePiece
+    如果不使用模板，编写通用棋盘最好的方法是采用多态技术，保存通用的 GamePiece 对象，然后，可让每种游戏的棋子继承 GamePiece 类。例如，在象棋游戏中，ChessPiece 可以是 GamePiece 的派生类，通过多态技术，既能保存 GamePiece 的 GameBoard，也能保存 ChessPiece。GameBoard 可以复制，所以 GameBoard 需要能复制 GamePiece。这个实现利用了多态技术，因此一种解决方案是给 GamePiece 基类添加纯虚方法 clone()，它的派生类必须实现 clone()，并返回一个具体的 GamePiece 的副本。GamePiece 基类如下：
+
+    ~~~c++
+    export class GamePiece
+    {
+    public:
+        virtual ~GamePiece()                             = default;
+        virtual std::unique_ptr<GamePiece> clone() const = 0;
+    };
+    ~~~
+
+    GamePiece 是一个抽象基类。ChessPiece 等具体类派生于它，并实现了 clone() 方法。
+
+    ~~~c++
+    class ChessPiece : public GamePiece
+    {
+    public:
+        std::unique_ptr<GamePiece> clone() const override
+        {
+            return std::make_unique<ChessPiece>(*this);
+        }
+    };
+    ~~~
+
+    GameBoard 的实现使用 unique_ptr 矢量组中的矢量来存储 GamePiece。
+
+    ~~~c++
+    export class GameBoard
+    {
+    public:
+        explicit GameBoard(size_t width = DefaultWidth, size_t height = DefaultHeight);
+        GameBoard(const GameBoard& src);
+        virtual ~GameBoard() = default;
+        GameBoard& operator=(const GameBoard& rhs);
+
+        GameBoard(GameBoard&& src)            = default;
+        GameBoard& operator=(GameBoard&& src) = default;
+
+        std::unique_ptr<GamePiece>&       at(size_t x, size_t y);
+        const std::unique_ptr<GamePiece>& at(size_t x, size_t y) const;
+
+        size_t getWidth() const { return m_width; }
+        size_t getHeight() const { return m_height; }
+
+        static const size_t DefaultWidth{10};
+        static const size_t DefaultHeight{10};
+
+        void swap(GameBoard& other) noexcept;
+
+    private:
+        void verifyCoordinate(size_t x, size_t y) const;
+
+        std::vector<std::vector<std::unique_ptr<GamePiece>>> m_cells;
+
+        size_t m_width{0}, m_height{0};
+    };
+    ~~~
+
+    在这个实现中，at() 返回指定位置的棋子的引用，而不是返回棋子的副本。GameBoard 作为一个二维数组的抽象，它应给出实际对象的索引，而不是给出对象的副本，以提供数组访问语义。客户代码不应存储这个引用将来使用，因为它可能是无效的；相反，应该在使用返回的引用之前调用 at()。这遵循了标准库中 std::vector 类的设计原理。
+
+    >**注意：**
+    >GameBoard 类的这个实现提供了 at() 的两个版本，一个版本返回引用，另一个版本返回 const 引用。
 
 2. 模板 Grid 类
+    下面是方法的定义。注意，这个方法为赋值运算符使用了“复制和交换”惯用语法，还使用 Scott Meyer 的 const_cast() 模式来避免代码重复，第 9 章讨论了这些主题。
+
 3. 使用 Grid 模板
 
 ## 16 C++标准库概述
